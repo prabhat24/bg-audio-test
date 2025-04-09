@@ -81,9 +81,11 @@ document.addEventListener("DOMContentLoaded", function () {
             i--;
 
             if (i === -1) {
-                const ossilationStream = returnBeep()
-                audioEle.srcObject = ossilationStream.stream;
-                audioEle.play();
+                audioEle.pause()
+                this.audio = new Audio();
+                this.audio.src = "https://adhocobjects.s3.ap-south-1.amazonaws.com/videokyc/static/audio/videokyc-join-call.mp3"
+                this.audio.load();
+                this.audio.play()
                 counter.innerText = `Audio play invoked !!!`;
             }
             if (i >= 0) {
