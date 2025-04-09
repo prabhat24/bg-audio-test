@@ -2,12 +2,18 @@ import {
     AudioPlayer
 } from "./audioPlayer.js";
 
+import {
+    playBeep, unlockAudio
+} from "./audioContextImplementation.js"
+
 try {
     var audioPlayer = AudioPlayer.getInstance();
 }
 catch (error){
     console.log(error)
 }
+
+var playSoundTimer = 5;
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -16,13 +22,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     audioPlayer.load("join-sound", "https://adhocobjects.s3.ap-south-1.amazonaws.com/videokyc/static/audio/videokyc-join-call.mp3");
-    
-    let playSoundTimer = 5;
+
     const playButton = document.getElementById("play-button");
     const infoMessageEle = document.getElementById("info-message");
     const counter = document.getElementById("counter");
-
+    const playAudioContext = document.getElementById("play-audio-context");
     playButton.onclick = () => {
+        playAudioContext.style.display = 'none'
         playButton.style.display = "none";
         infoMessageEle.style.display = "block";
         infoMessageEle.innerText = `We will play audio on this device after ${playSoundTimer} sec. Please minimize the tab.`;
@@ -35,9 +41,44 @@ document.addEventListener("DOMContentLoaded", function () {
             counter.innerText = `Playing audio in ${i} sec...`;
             logMessage(`Countdown: ${i} sec remaining`, "info");
             i--;
-
-            if (i === 0) {
+            if (i === -1) {
                 playSoundHandler();
+                counter.innerText = `Audio play invoked !!!`;
+            }
+            if (i >= 0) {
+                setTimeout(handler, 1000);
+            }
+        }
+        setTimeout(handler, 1000);
+    };
+});
+
+// sound play using audio context
+document.addEventListener("DOMContentLoaded", function () {
+
+
+    const playAudioContext = document.getElementById("play-audio-context");
+    const infoMessageEle = document.getElementById("info-message");
+    const counter = document.getElementById("counter");
+    const playButton = document.getElementById("play-button");
+    playAudioContext.onclick = () => {
+        playAudioContext.style.display = "none"
+        playButton.style.display = "none";
+        infoMessageEle.style.display = "block";
+        infoMessageEle.innerText = `We will play audio on this device after ${playSoundTimer} sec. Please minimize the tab.`;
+        logMessage(`Audio will play in ${playSoundTimer} sec...`, "info");
+
+        let i = playSoundTimer;
+        unlockAudio()
+        function handler() {
+            counter.style.display = "block";
+            counter.innerText = `Playing audio in ${i} sec...`;
+            logMessage(`Countdown: ${i} sec remaining`, "info");
+            i--;
+
+            if (i === -1) {
+                playAudioContextHandler();
+                counter.innerText = `Audio play invoked !!!`;
             }
             if (i >= 0) {
                 setTimeout(handler, 1000);
@@ -70,6 +111,16 @@ function playSoundHandler(dummy=false) {
         logMessage("Audio is now playing!", "info");
     } catch (error) {
         logMessage("Error playing audio: " + error.message, "error");
+    }
+}
+
+function playAudioContextHandler(dummy=false) {
+    try {
+        // audioContextPlayer.play("join-sound", dummy);
+        playBeep()
+        logMessage("Audio context is now playing!", "info");
+    } catch (error) {
+        logMessage("Error playing audio context: " + error.message, "error");
     }
 }
 
