@@ -13,7 +13,7 @@ const unlockAudio = () => {
 
       // Fill buffer with very soft white noise
       for (let i = 0; i < sampleRate; i++) {
-        data[i] = (Math.random() * 2 - 1) * 0.001; // Noise between -0.001 and 0.001
+        data[i] = (Math.random() * 2 - 1) * 1; // Noise between -0.001 and 0.001
       }
 
       noiseSource = audioContext.createBufferSource();
