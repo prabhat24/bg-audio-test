@@ -3,7 +3,7 @@ import {
 } from "./audioPlayer.js";
 
 import {
-    playBeep, unlockAudio
+    returnBeep, whiteNoiseAudio
 } from "./audioContextImplementation.js"
 
 try {
@@ -69,7 +69,11 @@ document.addEventListener("DOMContentLoaded", function () {
         logMessage(`Audio will play in ${playSoundTimer} sec...`, "info");
 
         let i = playSoundTimer;
-        unlockAudio()
+        const whiteNoiseStream = whiteNoiseAudio()
+        
+        const audioEle = document.getElementById("audio-ele")
+        audioEle.srcObject = whiteNoiseStream.stream
+        audioEle.play();
         function handler() {
             counter.style.display = "block";
             counter.innerText = `Playing audio in ${i} sec...`;
@@ -77,7 +81,9 @@ document.addEventListener("DOMContentLoaded", function () {
             i--;
 
             if (i === -1) {
-                playAudioContextHandler();
+                const ossilationStream = returnBeep()
+                audioEle.srcObject = ossilationStream.stream;
+                audioEle.play();
                 counter.innerText = `Audio play invoked !!!`;
             }
             if (i >= 0) {

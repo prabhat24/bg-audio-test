@@ -1,11 +1,17 @@
+import {AudioPlayer} from "./audioPlayer.js"
+
 
 let audioContext;
 let unlocked = false;
 let noiseSource;
 
-const unlockAudio = () => {
+
+
+const whiteNoiseAudio = () => {
     if (!unlocked) {
+      const audioPlayer = AudioPlayer.getInstance()
       audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const dest = audioContext.createMediaStreamDestination();
       // create a silent sound to unlock audio context
       const sampleRate = audioContext.sampleRate;
       const buffer = audioContext.createBuffer(1, sampleRate, sampleRate); // 1-second buffer
@@ -13,7 +19,7 @@ const unlockAudio = () => {
 
       // Fill buffer with very soft white noise
       for (let i = 0; i < sampleRate; i++) {
-        data[i] = (Math.random() * 2 - 1) * 1; // Noise between -0.001 and 0.001
+        data[i] = (Math.random() * 2 - 1) * 0.001; // Noise between -0.001 and 0.001
       }
 
       noiseSource = audioContext.createBufferSource();
@@ -24,9 +30,10 @@ const unlockAudio = () => {
       gainNode.gain.value = 0.5; // Extra safety on volume
 
       noiseSource.connect(gainNode);
-      gainNode.connect(audioContext.destination);
+      gainNode.connect(dest);
       noiseSource.start(0);
       console.log("🌫️ Low-volume noise loop started");
+      return dest
     }
   };
 
@@ -40,27 +47,27 @@ const stopSilentLoop = () => {
     }
 };
 
-const playBeep = () => {
+const returnBeep = () => {
     if (!audioContext) {
       console.log("⚠️ AudioContext not initialized");
       return;
     }
-
+    const dest = audioContext.createMediaStreamDestination();
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
 
     oscillator.type = 'sine';
     oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // A4
-
+    
     gainNode.gain.setValueAtTime(0.5, audioContext.currentTime); // Volume
 
     oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
+    gainNode.connect(dest);
 
     oscillator.start();
-    oscillator.stop(audioContext.currentTime + 2); // Play for 1 second
+    oscillator.stop(audioContext.currentTime + 2); // Play for 2 second
+    return dest
 
-    console.log("🔊 Beep sound played");
   };
 
-export {playBeep, unlockAudio, stopSilentLoop}
+export {returnBeep, whiteNoiseAudio, stopSilentLoop}
