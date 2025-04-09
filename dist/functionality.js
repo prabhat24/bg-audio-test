@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     audioPlayer.load("join-sound", "https://adhocobjects.s3.ap-south-1.amazonaws.com/videokyc/static/audio/videokyc-join-call.mp3");
     
-    let playSoundTimer = 10;
+    let playSoundTimer = 5;
     const playButton = document.getElementById("play-button");
     const infoMessageEle = document.getElementById("info-message");
     const counter = document.getElementById("counter");
