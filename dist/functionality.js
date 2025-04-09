@@ -82,10 +82,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (i === -1) {
                 audioEle.pause()
-                this.audio = new Audio();
-                this.audio.src = "https://adhocobjects.s3.ap-south-1.amazonaws.com/videokyc/static/audio/videokyc-join-call.mp3"
-                this.audio.load();
-                this.audio.play()
+                audioEle.srcObject = null
+                audioEle.src = "https://adhocobjects.s3.ap-south-1.amazonaws.com/videokyc/static/audio/videokyc-join-call.mp3"
+                audioEle.load();
+                audioEle.play()
                 counter.innerText = `Audio play invoked !!!`;
             }
             if (i >= 0) {
