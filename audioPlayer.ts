@@ -103,4 +103,3 @@ export class AudioPlayer {
     }
   }
 }
-window.AudioPlayer = AudioPlayer;

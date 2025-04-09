@@ -1,2 +1,7 @@
 **/node_modules
 index.html.abcd
+**/backup/
+**/assets/
+**.bak
+.vscode
+package-lock.json

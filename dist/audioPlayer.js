@@ -35,6 +35,7 @@ class BackgroundAudio {
     play() {
         if (this.audio.src) {
             this.audio.muted = false;
+            this.audio.volume = 1;
             this.audio.play();
             this.audio.loop = true;
             logger.info(`[bg-audio] play invoked | playing loaded audio from ${this.audio.src}`);
@@ -47,7 +48,7 @@ class BackgroundAudio {
     }
     dummyPlay() {
         if (this.audio.src) {
-            this.audio.muted = true;
+            this.audio.volume = 0;
             this.audio.play();
             logger.info(`[bg-audio] dummy play invoked | playing loaded audio from ${this.audio.src}`);
             console.log(`[bg-audio] dummy play invoked | playing loaded audio from ${this.audio.src}`);
@@ -88,5 +89,4 @@ class AudioPlayer {
         }
     }
 }
-exports.AudioPlayer = AudioPlayer;
-window.AudioPlayer = AudioPlayer;
+export {AudioPlayer}
