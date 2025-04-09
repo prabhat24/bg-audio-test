@@ -1,25 +1,44 @@
 
 let audioContext;
 let unlocked = false;
-
+let noiseSource;
 
 const unlockAudio = () => {
     if (!unlocked) {
       audioContext = new (window.AudioContext || window.webkitAudioContext)();
       // create a silent sound to unlock audio context
-      const buffer = audioContext.createBuffer(1, 1, 22050);
-      const source = audioContext.createBufferSource();
-      source.buffer = buffer;
-      source.connect(audioContext.destination);
-      source.start(0);
+      const sampleRate = audioContext.sampleRate;
+      const buffer = audioContext.createBuffer(1, sampleRate, sampleRate); // 1-second buffer
+      const data = buffer.getChannelData(0);
 
-      unlocked = true;
-      console.log("🔓 AudioContext unlocked");
+      // Fill buffer with very soft white noise
+      for (let i = 0; i < sampleRate; i++) {
+        data[i] = (Math.random() * 2 - 1) * 0.001; // Noise between -0.001 and 0.001
+      }
+
+      noiseSource = audioContext.createBufferSource();
+      noiseSource.buffer = buffer;
+      noiseSource.loop = true;
+
+      const gainNode = audioContext.createGain();
+      gainNode.gain.value = 0.5; // Extra safety on volume
+
+      noiseSource.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      noiseSource.start(0);
+      console.log("🌫️ Low-volume noise loop started");
     }
   };
 
 
-
+const stopSilentLoop = () => {
+    if (silentSource) {
+      silentSource.stop();
+      silentSource.disconnect();
+      silentSource = null;
+      console.log("⏹️ Silent audio loop stopped");
+    }
+};
 
 const playBeep = () => {
     if (!audioContext) {
@@ -44,4 +63,4 @@ const playBeep = () => {
     console.log("🔊 Beep sound played");
   };
 
-export {playBeep, unlockAudio}
+export {playBeep, unlockAudio, stopSilentLoop}
