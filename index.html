@@ -138,8 +138,45 @@
     .dark-copy-btn:active {
         transform: scale(0.97);
     }
+    .dark-box {
+        background-color: #1e1e1e;
+        color: #ffffff;
+        padding: 16px;
+        border-radius: 8px;
+        border: 1px solid #444;
+        max-width: 600px;
+        width: 100%;
+        margin-top: 20px;
+        font-size: 14px;
+    }
 
-    </style>
+    .user-agent-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 8px;
+        word-break: break-word;
+    }
+
+    .user-agent-text {
+        flex-grow: 1;
+    }
+
+    .copy-btn {
+        background-color: #333;
+        color: #fff;
+        border: none;
+        padding: 6px 10px;
+        font-size: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .copy-btn:hover {
+        background-color: #555;
+    }
+</style>
 </head>
 <body>
     <div class="container">
@@ -159,6 +196,13 @@
         <div id="counter"></div>
         <div id="log-container"> 
             <button class="action-btn dark-copy-btn" id="copy-logs-btn">📋 Copy Logs</button>
+        </div>
+        <div id="user-agent-container" class="dark-box">
+            <p><strong>User Agent:</strong></p>
+            <div class="user-agent-row">
+                <span id="user-agent-text" class="user-agent-text"></span>
+                <button id="copy-user-agent" title="Copy User Agent" class="copy-btn">📋</button>
+            </div>
         </div>
     </div>
 

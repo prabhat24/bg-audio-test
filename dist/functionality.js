@@ -183,3 +183,24 @@ document.getElementById("copy-logs-btn").addEventListener("click", function () {
         }, 2000);
     });
 });
+
+window.onload = function () {
+    const userAgent = navigator.userAgent;
+    const userAgentTextElem = document.getElementById("user-agent-text");
+    const copyButton = document.getElementById("copy-user-agent");
+
+    userAgentTextElem.textContent = userAgent;
+
+    copyButton.addEventListener("click", () => {
+        navigator.clipboard.writeText(userAgent)
+            .then(() => {
+                copyButton.textContent = "✅";
+                setTimeout(() => {
+                    copyButton.textContent = "📋";
+                }, 1500);
+            })
+            .catch(err => {
+                console.error("Failed to copy user agent: ", err);
+            });
+    });
+};
