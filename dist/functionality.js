@@ -12,56 +12,62 @@ try {
 catch (error){
     console.log(error)
 }
-
+var timeoutId = null
 var playSoundTimer = 5;
+var playAudioContext;
+var delayDropdown;
+// document.addEventListener("DOMContentLoaded", function () {
 
-document.addEventListener("DOMContentLoaded", function () {
-
-    logMessage("Document is fully loaded!", "info");
-    addVisibilityChangeHandler()
+//     logMessage("Document is fully loaded!", "info");
+//     addVisibilityChangeHandler()
 
 
-    audioPlayer.load("join-sound", "https://adhocobjects.s3.ap-south-1.amazonaws.com/videokyc/static/audio/videokyc-join-call.mp3");
+//     audioPlayer.load("join-sound", "https://adhocobjects.s3.ap-south-1.amazonaws.com/videokyc/static/audio/videokyc-join-call.mp3");
 
-    const playButton = document.getElementById("play-button");
-    const infoMessageEle = document.getElementById("info-message");
-    const counter = document.getElementById("counter");
-    const playAudioContext = document.getElementById("play-audio-context");
-    playButton.onclick = () => {
-        playAudioContext.style.display = 'none'
-        playButton.style.display = "none";
-        infoMessageEle.style.display = "block";
-        infoMessageEle.innerText = `We will play audio on this device after ${playSoundTimer} sec. Please minimize the tab.`;
-        logMessage(`Audio will play in ${playSoundTimer} sec...`, "info");
+//     const playButton = document.getElementById("play-button");
+//     const infoMessageEle = document.getElementById("info-message");
+//     const counter = document.getElementById("counter");
+//     const playAudioContext = document.getElementById("play-audio-context");
+//     playButton.onclick = () => {
+//         playAudioContext.style.display = 'none'
+//         playButton.style.display = "none";
+//         infoMessageEle.style.display = "block";
+//         infoMessageEle.innerText = `We will play audio on this device after ${playSoundTimer} sec. Please minimize the tab.`;
+//         logMessage(`Audio will play in ${playSoundTimer} sec...`, "info");
 
-        let i = playSoundTimer;
-        playSoundHandler(true);
-        function handler() {
-            counter.style.display = "block";
-            counter.innerText = `Playing audio in ${i} sec...`;
-            logMessage(`Countdown: ${i} sec remaining`, "info");
-            i--;
-            if (i === -1) {
-                playSoundHandler();
-                counter.innerText = `Audio play invoked !!!`;
-            }
-            if (i >= 0) {
-                setTimeout(handler, 1000);
-            }
-        }
-        setTimeout(handler, 1000);
-    };
-});
+//         let i = playSoundTimer;
+//         playSoundHandler(true);
+//         function handler() {
+//             counter.style.display = "block";
+//             counter.innerText = `Playing audio in ${i} sec...`;
+//             logMessage(`Countdown: ${i} sec remaining`, "info");
+//             i--;
+//             if (i === -1) {
+//                 playSoundHandler();
+//                 counter.innerText = `Audio play invoked !!!`;
+//             }
+//             if (i >= 0) {
+//                 setTimeout(handler, 1000);
+//             }
+//         }
+//         setTimeout(handler, 1000);
+//     };
+// });
 
 // sound play using audio context
 document.addEventListener("DOMContentLoaded", function () {
 
 
-    const playAudioContext = document.getElementById("play-audio-context");
+    playAudioContext = document.getElementById("play-audio-context");
     const infoMessageEle = document.getElementById("info-message");
     const counter = document.getElementById("counter");
     const playButton = document.getElementById("play-button");
+    delayDropdown = document.getElementById("delay-dropdown");
+
+    delayDropdown.addEventListener("change", onChangeDelayDropdown)
+
     playAudioContext.onclick = () => {
+        clearTimeout(timeoutId)
         playAudioContext.style.display = "none"
         playButton.style.display = "none";
         infoMessageEle.style.display = "block";
@@ -75,6 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
         audioEle.srcObject = whiteNoiseStream.stream
         audioEle.play();
         function handler() {
+            clearTimeout(timeoutId)
             counter.style.display = "block";
             counter.innerText = `Playing audio in ${i} sec...`;
             logMessage(`Countdown: ${i} sec remaining`, "info");
@@ -85,18 +92,30 @@ document.addEventListener("DOMContentLoaded", function () {
                 audioEle.srcObject = null
                 audioEle.src = "https://adhocobjects.s3.ap-south-1.amazonaws.com/videokyc/static/audio/videokyc-join-call.mp3"
                 audioEle.load();
+                audioEle.loop = true;
                 audioEle.play()
                 counter.innerText = `Audio play invoked !!!`;
             }
             if (i >= 0) {
-                setTimeout(handler, 1000);
+                timeoutId = setTimeout(handler, 1000);
             }
         }
-        setTimeout(handler, 1000);
+        timeoutId = setTimeout(handler, 1000);
     };
 
 
 });
+
+
+function onChangeDelayDropdown(event) {
+    console.log("dfasdfasd")
+    const selectedVal = this.value
+    playSoundTimer = parseInt(selectedVal)
+    console.log(selectedVal)
+    playAudioContext.style.display = "block"
+    playAudioContext.innerText = `Play sound after ${selectedVal} sec`
+
+}
 
 function logMessage(message, type) {
     const logContainer = document.getElementById("log-container");

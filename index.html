@@ -107,18 +107,40 @@
             color: #4CAF50;
             font-weight: bold;
         }
+        .dark-dropdown {
+            background-color: #1e1e1e;
+            color: #ffffff;
+            border: 1px solid #555;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 16px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
 
+    .dark-dropdown:focus {
+        outline: none;
+        border-color: #888;
+        box-shadow: 0 0 4px #888;
+    }
     </style>
 </head>
 <body>
     <div class="container">
         <audio id="audio-ele"></audio>
         <h1>Background Audio Test Page</h1>
-        <button class="action-btn" id="play-button">Play Audio</button>
-        <button class="action-btn" id="play-audio-context">Play using audio context</button>
+
+        <p>step 1: Add delay to pay sound</p>
+        <select id="delay-dropdown" class="dark-dropdown">
+            <option value="5">5 sec delay</option>
+            <option value="60">60 sec delay</option>
+        </select>
+        <p>step 2: Hit play sound button and minimize the tab immidiately.</p>
+        <button style="display: none;" class="action-btn" id="play-button">Audio</button>
+        <button class="action-btn" id="play-audio-context">Play after 5 seconds</button>
         <p id="info-message"></p>
         <div id="counter"></div>
-
         <div id="log-container"></div>
     </div>
 
