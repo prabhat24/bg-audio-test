@@ -62,6 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const infoMessageEle = document.getElementById("info-message");
     const counter = document.getElementById("counter");
     const playButton = document.getElementById("play-button");
+    const stopButton = document.getElementById("stop-playing")
     delayDropdown = document.getElementById("delay-dropdown");
 
     delayDropdown.addEventListener("change", onChangeDelayDropdown)
@@ -95,6 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 audioEle.loop = true;
                 audioEle.play()
                 counter.innerText = `Audio play invoked !!!`;
+                logMessage("Audio play invoked !!!", "info")
             }
             if (i >= 0) {
                 timeoutId = setTimeout(handler, 1000);
@@ -106,9 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
-
 function onChangeDelayDropdown(event) {
-    console.log("dfasdfasd")
     const selectedVal = this.value
     playSoundTimer = parseInt(selectedVal)
     console.log(selectedVal)
@@ -156,3 +156,30 @@ function addVisibilityChangeHandler() {
         logMessage(`Visibility State is ${document.visibilityState}`);
     }
 }
+
+document.getElementById("copy-logs-btn").addEventListener("click", function () {
+    const logContainer = document.getElementById("log-container");
+    const logs = logContainer.innerText.trim();
+    const copyBtn = this;
+
+    if (!logs) {
+        copyBtn.textContent = "⚠️ No logs!";
+        setTimeout(() => {
+            copyBtn.textContent = "📋 Copy Logs";
+        }, 2000);
+        return;
+    }
+
+    navigator.clipboard.writeText(logs).then(() => {
+        copyBtn.textContent = "✅ Copied!";
+        setTimeout(() => {
+            copyBtn.textContent = "📋 Copy Logs";
+        }, 2000);
+    }).catch(err => {
+        console.error("Copy failed:", err);
+        copyBtn.textContent = "❌ Failed";
+        setTimeout(() => {
+            copyBtn.textContent = "📋 Copy Logs";
+        }, 2000);
+    });
+});
