@@ -27,7 +27,7 @@ const whiteNoiseAudio = () => {
       noiseSource.loop = true;
 
       const gainNode = audioContext.createGain();
-      gainNode.gain.value = 0.5; // Extra safety on volume
+      gainNode.gain.value = 0.1; // Extra safety on volume
 
       noiseSource.connect(gainNode);
       gainNode.connect(dest);
