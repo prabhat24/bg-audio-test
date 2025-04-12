@@ -16,6 +16,7 @@ var timeoutId = null
 var playSoundTimer = 5;
 var playAudioContext;
 var delayDropdown;
+var audioEle;
 // document.addEventListener("DOMContentLoaded", function () {
 
 //     logMessage("Document is fully loaded!", "info");
@@ -64,7 +65,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const playButton = document.getElementById("play-button");
     const stopButton = document.getElementById("stop-playing")
     delayDropdown = document.getElementById("delay-dropdown");
-
+    audioEle = document.getElementById("audio-ele")
+    addAudioHandlers(audioEle)
     delayDropdown.addEventListener("change", onChangeDelayDropdown)
 
     playAudioContext.onclick = () => {
@@ -77,8 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let i = playSoundTimer;
         const whiteNoiseStream = whiteNoiseAudio()
-        
-        const audioEle = document.getElementById("audio-ele")
+    
         audioEle.srcObject = whiteNoiseStream.stream
         audioEle.play();
         function handler() {
@@ -108,6 +109,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
+
+function addAudioHandlers(element){
+
+    element.onplay = () => {
+        logMessage("audio element| audio play")
+    }
+    element.onplaying = () => {
+        logMessage("audio element| on playing ele")
+    }
+    element.onpause = () => {
+        logMessage("on pause ele")
+    }
+    element.onsuspend = () => {
+        logMessage("audio element| on suspend ele")
+    }
+    element.onended = () => {
+        logMessage("audio element| play back has ended")
+    }
+    element.onerror = () => {
+        logMessage("audio element| audio ele error")
+    }
+    element.onwaiting = () => {
+        logMessage("audio element| audio ele waiting")
+    }
+    element.onabort = () => {
+        logMessage("audio element| audio ele aborted")
+    }
+}
+
+
 function onChangeDelayDropdown(event) {
     const selectedVal = this.value
     playSoundTimer = parseInt(selectedVal)
@@ -117,7 +148,7 @@ function onChangeDelayDropdown(event) {
 
 }
 
-function logMessage(message, type) {
+function logMessage(message, type="info") {
     const logContainer = document.getElementById("log-container");
     const logEntry = document.createElement("div");
     logEntry.classList.add("log-entry");
