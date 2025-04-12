@@ -92,11 +92,26 @@ document.addEventListener("DOMContentLoaded", function () {
             if (i === -1) {
                 audioEle.pause()
                 audioEle.srcObject = null
+                console.log(navigator.mediaSession)
+                if ('mediaSession' in navigator) {
+                    logMessage("create new media session");
+                    navigator.mediaSession.metadata = new MediaMetadata({
+                        title: 'VKYC Join Call Sound',
+                        artist: 'VKYC App',
+                        album: 'Audio Playback Test',
+                        artwork: [
+                            { src: 'https://images.yourstory.com/cs/images/companies/SocialMediaLogoWHITE-1692612725795.jpg', sizes: '512x512', type: 'image/jpg' } // optional
+                        ]
+                    });
+            
+                    navigator.mediaSession.playbackState = 'playing';
+                }
                 audioEle.src = "https://adhocobjects.s3.ap-south-1.amazonaws.com/videokyc/static/audio/videokyc-join-call.mp3"
                 audioEle.load();
                 audioEle.loop = true;
                 audioEle.play()
                 counter.innerText = `Audio play invoked !!!`;
+                console.log(navigator.mediaSession)
                 logMessage("Audio play invoked !!!", "info")
             }
             if (i >= 0) {
