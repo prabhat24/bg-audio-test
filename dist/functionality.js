@@ -3,7 +3,7 @@ import {
 } from "./audioPlayer.js";
 
 import {
-    returnBeep, whiteNoiseAudio
+    returnBeep, whiteNoiseAudio, playAudioFromFile
 } from "./audioContextImplementation.js"
 
 try {
@@ -90,8 +90,8 @@ document.addEventListener("DOMContentLoaded", function () {
             i--;
 
             if (i === -1) {
-                audioEle.pause()
-                audioEle.srcObject = null
+                // audioEle.pause()
+                // audioEle.srcObject = null
                 console.log(navigator.mediaSession)
                 if ('mediaSession' in navigator) {
                     logMessage("create new media session");
@@ -106,10 +106,11 @@ document.addEventListener("DOMContentLoaded", function () {
             
                     navigator.mediaSession.playbackState = 'playing';
                 }
-                audioEle.src = "https://adhocobjects.s3.ap-south-1.amazonaws.com/videokyc/static/audio/videokyc-join-call.mp3"
-                audioEle.load();
-                audioEle.loop = true;
-                audioEle.play()
+                // audioEle.src = "https://adhocobjects.s3.ap-south-1.amazonaws.com/videokyc/static/audio/videokyc-join-call.mp3"
+                // audioEle.load();
+                // audioEle.loop = true;
+                // audioEle.play()
+                playAudioFromFile("https://adhocobjects.s3.ap-south-1.amazonaws.com/videokyc/static/audio/videokyc-join-call.mp3", true)
                 counter.innerText = `Audio play invoked !!!`;
                 console.log(navigator.mediaSession)
                 logMessage("Audio play invoked !!!", "info")

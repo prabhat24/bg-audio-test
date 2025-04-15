@@ -4,14 +4,14 @@ import {AudioPlayer} from "./audioPlayer.js"
 let audioContext;
 let unlocked = false;
 let noiseSource;
-
+let dest;
 
 
 const whiteNoiseAudio = () => {
     if (!unlocked) {
       const audioPlayer = AudioPlayer.getInstance()
       audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      const dest = audioContext.createMediaStreamDestination();
+      dest = audioContext.createMediaStreamDestination();
       // create a silent sound to unlock audio context
       const sampleRate = audioContext.sampleRate;
       const buffer = audioContext.createBuffer(1, sampleRate, sampleRate); // 1-second buffer
@@ -37,6 +37,45 @@ const whiteNoiseAudio = () => {
     }
   };
 
+
+async function playAudioFromFile(url, loop) {
+  if (!audioContext || !dest) {
+    console.warn("Audio context not initialized yet.");
+    return;
+  }
+
+  try {
+    // Load the audio file
+    // const response = await fetch(url, );
+    // const arrayBuffer = await response.arrayBuffer();
+    // const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+    const audioElement = new Audio(url);
+    audioElement.crossOrigin = "anonymous";
+  
+    const source = audioContext.createMediaElementSource(audioElement);
+    // Create source and gain
+    // const source = audioContext.createBufferSource();
+    // source.buffer = audioBuffer;
+    if (loop) {
+      source.loop = true;
+    }
+    const gainNode = audioContext.createGain();
+    gainNode.gain.value = 1.0; // Adjust volume as needed
+
+    // Connect to same destination as white noise
+    source.connect(gainNode);
+    gainNode.connect(dest);
+
+    source.start();
+    console.log("🎵 Audio file playing");
+
+    // Optional: return the source to stop it manually later
+    return source;
+  } 
+  catch (err) {
+    console.error("Failed to load or play audio:", err);
+  }
+}
 
 const stopSilentLoop = () => {
     if (silentSource) {
@@ -70,4 +109,4 @@ const returnBeep = () => {
 
   };
 
-export {returnBeep, whiteNoiseAudio, stopSilentLoop}
+export {returnBeep, whiteNoiseAudio, stopSilentLoop, playAudioFromFile}
