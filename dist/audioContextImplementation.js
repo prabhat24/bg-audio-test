@@ -88,7 +88,7 @@ const returnBeep = () => {
     gainNode.connect(dest);
     oscillator.loop = true
     oscillator.start();
-    oscillator.stop(audioContext.currentTime + 2); // Play for 2 second
+    oscillator.stop(audioContext.currentTime + 6); // Play for 2 second
     return dest
   };
 
