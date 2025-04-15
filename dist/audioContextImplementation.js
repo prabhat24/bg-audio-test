@@ -80,16 +80,46 @@ const returnBeep = () => {
     const gainNode = audioContext.createGain();
 
     oscillator.type = 'sine';
-    oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // A4
+    oscillator.frequency.setValueAtTime(350, audioContext.currentTime); // A4
     
-    gainNode.gain.setValueAtTime(0.5, audioContext.currentTime); // Volume
+    gainNode.gain.setValueAtTime(1, audioContext.currentTime); // Volume
 
     oscillator.connect(gainNode);
-    gainNode.connect(dest);
+    oscillator.connect(dest);
     oscillator.loop = true
     oscillator.start();
     oscillator.stop(audioContext.currentTime + 6); // Play for 2 second
     return dest
   };
 
-export {returnBeep, whiteNoiseAudio, stopSilentLoop, playAudioFromFile}
+async function loadAudioBufferFromURL(url) {
+  if (!audioContext) {
+    console.log("⚠️ AudioContext not initialized");
+    return;
+  }
+  // Fetch audio file
+  const response = await fetch(url);
+  const arrayBuffer = await response.arrayBuffer();
+
+  // Decode audio file into AudioBuffer
+  const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+  // You now have the full audio loaded
+  console.log("✅ Audio Loaded");
+  console.log("Duration:", audioBuffer.duration, "seconds");
+  console.log("Sample rate:", audioBuffer.sampleRate);
+  console.log("Channels:", audioBuffer.numberOfChannels);
+
+  // Get raw PCM data from first channel (mono/stereo/etc.)
+  const pcmData = audioBuffer.getChannelData(0); // Float32Array
+  console.log("PCM Sample at index 0:", pcmData[0]);
+
+
+  const source = audioContext.createBufferSource();
+  source.buffer = audioBuffer;
+  source.loop = true
+  source.connect(dest);
+  source.start(0);
+}
+
+export {returnBeep, whiteNoiseAudio, stopSilentLoop, playAudioFromFile, loadAudioBufferFromURL}

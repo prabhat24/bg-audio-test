@@ -3,7 +3,7 @@ import {
 } from "./audioPlayer.js";
 
 import {
-    returnBeep, whiteNoiseAudio, playAudioFromFile
+    returnBeep, whiteNoiseAudio, playAudioFromFile, loadAudioBufferFromURL
 } from "./audioContextImplementation.js"
 
 try {
@@ -113,7 +113,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 // audioEle.load();
                 // audioEle.loop = true;
                 // audioEle.play()
-                playAudioContextHandler()
+                loadAudioBufferFromURL("/audio/sample-12s.mp3")
+                // playAudioContextHandler()
 
                 counter.innerText = `Audio play invoked !!!`;
                 console.log(navigator.mediaSession)
