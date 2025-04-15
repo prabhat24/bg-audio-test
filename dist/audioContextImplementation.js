@@ -52,41 +52,13 @@ const whiteNoiseAudio = () => {
   };
 
 
-async function playAudioFromFile(url, loop) {
-  if (!audioContext || !dest) {
-    logMessage("Audio context not initialized yet.", "error");
-    return;
-  }
-
-  try {
-    
-    const audioElement = new Audio();
-    audioElement.src = url
-    audioElement.crossOrigin = "anonymous";
-    audioElement.load()
-    const source = audioContext.createMediaElementSource(audioElement);
-    // Create source and gain
-    // const source = audioContext.createBufferSource();
-    // source.buffer = audioBuffer;
-    if (loop) {
-      source.loop = true;
-    }
-    const gainNode = audioContext.createGain();
-    gainNode.gain.value = 1.0; // Adjust volume as needed
-
-    // Connect to same destination as white noise
-    source.connect(gainNode);
-    gainNode.connect(dest);
-
-    source.start();
-    logMessage("Mixing 2 audio. Beep sound mixed");
-
-    // Optional: return the source to stop it manually later
-    return source;
-  } 
-  catch (err) {
-    logMessage("Failed to load or play audio:", "error");
-  }
+async function playAudioFromFile(ele, loop) {
+  dest = audioContext.createMediaStreamDestination();
+  const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  const source = audioContext.createMediaElementSource(ele)
+  source.loop = true
+  source.connect(dest)
+  return dest
 }
 
 const stopSilentLoop = () => {
@@ -103,7 +75,7 @@ const returnBeep = () => {
       console.log("⚠️ AudioContext not initialized");
       return;
     }
-    const dest = audioContext.createMediaStreamDestination();
+    // const dest = audioContext.createMediaStreamDestination();
     const oscillator = audioContext.createOscillator();
     const gainNode = audioContext.createGain();
 
@@ -114,11 +86,10 @@ const returnBeep = () => {
 
     oscillator.connect(gainNode);
     gainNode.connect(dest);
-
+    oscillator.loop = true
     oscillator.start();
     oscillator.stop(audioContext.currentTime + 2); // Play for 2 second
     return dest
-
   };
 
 export {returnBeep, whiteNoiseAudio, stopSilentLoop, playAudioFromFile}
