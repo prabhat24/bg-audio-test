@@ -60,7 +60,7 @@ const base64File = "data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4L
 // sound play using audio context
 document.addEventListener("DOMContentLoaded", function () {
 
-
+    const fakebtn = document.getElementById('fakeAudioButton');
     playAudioContext = document.getElementById("play-audio-context");
     const infoMessageEle = document.getElementById("info-message");
     const counter = document.getElementById("counter");
@@ -70,8 +70,8 @@ document.addEventListener("DOMContentLoaded", function () {
     audioEle = document.getElementById("audio-ele")
     addAudioHandlers(audioEle)
     delayDropdown.addEventListener("change", onChangeDelayDropdown)
-
-    playAudioContext.onclick = async () => {
+    
+    document.body.addEventListener("touchstart", async (event) => {
         clearTimeout(timeoutId)
         playAudioContext.style.display = "none"
         playButton.style.display = "none";
@@ -125,8 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
         timeoutId = setTimeout(handler, 1000);
-    };
-
+    });
 
 });
 
@@ -237,6 +236,13 @@ document.getElementById("copy-logs-btn").addEventListener("click", function () {
 });
 
 window.onload = function () {
+    const fakebtn = document.getElementById('fakeAudioButton');
+
+    // Wait a bit just to ensure DOM is ready
+    setTimeout(() => {
+        console.log("here")
+        fakebtn.click(); // Simulated user gesture
+    }, 100);
     const userAgent = navigator.userAgent;
     const userAgentTextElem = document.getElementById("user-agent-text");
     const copyButton = document.getElementById("copy-user-agent");
